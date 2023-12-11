@@ -7,7 +7,9 @@ import {
    Typography,
     // IconButton,
      Button,
-      Stack } from "@mui/material";
+      Stack, 
+      CircularProgress,
+      Box} from "@mui/material";
 // import { Close } from "@mui/icons-material";
 import { 
   // styled,
@@ -17,38 +19,52 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-// import Collapse from "@mui/material/Collapse";
-// import Avatar from "@mui/material/Avatar";
+import { useGetproductsByNameQuery } from '../../redux/productsApi'
 
-// import { red } from "@mui/material/colors";
-// import FavoriteIcon from "@mui/icons-material/Favorite";
-// import ShareIcon from "@mui/icons-material/Share";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+
+
+
+
+
 
 // const receviedDateFromAPI = [{}, {}, {}, {}];
 
 const Home = () => {
   const theme = useTheme();
+  const { data, error, isLoading } = useGetproductsByNameQuery()
+  console.log(data)
 
 
-  const myList = [
-    { text: "This impressive paella is a perfect party dish and a fun meal tocook together with your guests." ,
-  image:"https://i.etsystatic.com/12212700/r/il/b95bb9/3041211407/il_794xN.3041211407_2kia.jpg"
-  },
-    {
-      text: "This impressive paella is a perfect party dish and a fun meal to cook together with your guests.",
-      image:"//mui.com/static/images/cards/paella.jpg"
-    },
-    {
-      image:"https://i.etsystatic.com/12212700/r/il/619fed/1764022704/il_1140xN.1764022704_nifu.jpg"
+  if (isLoading) {
+    return(
+      <Box sx={{ display: 'flex' }}>
+      <CircularProgress />
+    </Box>
+    )
+  }
 
-    },
-    {
-      image:"https://i.etsystatic.com/12212700/r/il/de612d/1811474049/il_794xN.1811474049_n4oz.jpg"
+  // const myList = [
+  //   { text: "This impressive paella is a perfect party dish and a fun meal tocook together with your guests." ,
+  // // image:"https://i.etsystatic.com/12212700/r/il/b95bb9/3041211407/il_794xN.3041211407_2kia.jpg",
+  // id:"1"
 
-    }
-  ];
+  // },
+  //   {
+  //     text: "This impressive paella is a perfect party dish and a fun meal to cook together with your guests.",
+  //     // image:"//mui.com/static/images/cards/paella.jpg", 
+  //     id:"2"
+  //   },
+  //   {
+  //     // image:"https://i.etsystatic.com/12212700/r/il/619fed/1764022704/il_1140xN.1764022704_nifu.jpg",
+  //     id:"3"
+  //   },
+  //   {
+  //     // image:"https://i.etsystatic.com/12212700/r/il/de612d/1811474049/il_794xN.1811474049_n4oz.jpg",
+  //     id:"4"
+
+  //   }
+  // ];
 
   return (
     <Stack
@@ -56,23 +72,25 @@ const Home = () => {
       sx={{ flexWrap: "wrap", justifyContent: "center" }}
     >
       {/* {receviedDateFromAPI.map((item) => { */}
-        {myList.map((item) => {
+      {/* {myList.map((item) => { */}
+
+
+            {data.map((item) => {
+
         return (
-          <Card sx={{ maxWidth: 277, mb: 6, mx: 2 }}
-            key={item.image}
+          <Card className="card" sx={{ maxWidth: 277, mb: 6, mx: 2 }}
+            key={item.id}
           >
             <CardMedia
               component="img"
               height="194"
               // image="//mui.com/static/images/cards/paella.jpg"
-              image={item.image}
+              image={item.imageLink}
               alt="Paella dish"
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary">
-                This impressive paella is a perfect party dish and a fun meal to
-                cook together with your guests.
-                
+                {item.description}
               </Typography>
             </CardContent>
             <CardActions
@@ -92,7 +110,7 @@ const Home = () => {
                 variant="body1"
                 color={theme.palette.error.light}
               >
-                $100
+               $ {item.price}
               </Typography>
             </CardActions>
           </Card>
